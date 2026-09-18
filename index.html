@@ -51,7 +51,7 @@
             margin-bottom: 1rem;
         }
 
-        /*   NAV   */
+        /* NAV */
         .nav-tabs {
             display: flex;
             justify-content: center;
@@ -80,7 +80,7 @@
             color: var(--primary);
         }
 
-        /*   main   */
+        /* main */
         .container {
             flex: 1;
             width: 100%;
@@ -107,7 +107,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /*   VEZÉRLŐPULT   */
+        /* VEZÉRLŐPULT */
         .controls {
             background-color: #f1f3f5;
             padding: 1.5rem;
@@ -144,7 +144,7 @@
             cursor: pointer;
         }
 
-        /*   GOMBOK   */
+        /* GOMBOK */
         .btn-group {
             display: flex;
             gap: 1rem;
@@ -170,20 +170,15 @@
         .btn-generate { background-color: var(--green); }
         .btn-print { background-color: var(--secondary); }
 
-        /*   NYOMTATHATÓ TERÜLETEK CSS   */
+        /* NYOMTATHATÓ TERÜLETEK CSS */
         .printable-page {
             width: 100%;
             background: white;
         }
 
+        /* Alapértelmezetten elrejtjük a fejlécet képernyőn */
         .page-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 2rem;
-            border-bottom: 2px dashed #ccc;
-            padding-bottom: 1rem;
-            font-size: 1.2rem;
-            font-weight: 700;
+            display: none; 
         }
 
         /* feladatok elrendezése */
@@ -309,7 +304,7 @@
             border-bottom: none;
         }
 
-        /*   LÁBLÉC   */
+        /* LÁBLÉC */
         .site-footer {
             text-align: center;
             padding: 2rem 1rem;
@@ -318,7 +313,7 @@
             font-weight: 700;
         }
 
-        /* MOBIL ÉS TABLET OPTIMALIZÁLÁS (Képernyős nézet) */
+        /* MOBIL ÉS TABLET OPTIMALIZÁLÁS */
         @media (max-width: 768px) {
             .math-grid {
                 grid-template-columns: 1fr;
@@ -336,31 +331,47 @@
             }
         }
 
-        /* NYOMTATÁSI STÍLUSOK - Agresszív mobil felülírással */
+        /* NYOMTATÁSI STÍLUSOK */
         @media print {
             @page {
                 size: A4 portrait;
                 margin: 0; 
             }
 
-            body {
+            /* A dupla oldal elkerüléséért a html-t és body-t maximáljuk 295mm-ben */
+            html, body {
                 background: white;
                 font-size: 12pt;
                 color: black;
                 margin: 0 !important;
                 padding: 0 !important;
                 width: 210mm !important;
-                height: 296mm !important; 
+                height: 295mm !important; 
+                max-height: 295mm !important;
                 display: flex !important;
                 flex-direction: column !important;
                 align-items: center !important;
                 justify-content: center !important;
                 overflow: hidden !important;
                 box-sizing: border-box !important;
+                page-break-after: avoid !important;
+                page-break-before: avoid !important;
             }
 
             .no-print { display: none !important; }
             
+            /* Csak nyomtatáskor jelenítjük meg a Név / Dátum részt */
+            .page-header {
+                display: flex !important;
+                justify-content: space-between !important;
+                width: 100% !important;
+                margin-bottom: 1cm !important;
+                border-bottom: 2px dashed #ccc !important;
+                padding-bottom: 0.5cm !important;
+                font-size: 14pt !important;
+                font-weight: 700 !important;
+            }
+
             .container { 
                 margin: 0 !important; 
                 padding: 0 !important; 
@@ -371,6 +382,7 @@
                 flex-direction: column !important;
                 justify-content: center !important;
                 align-items: center !important;
+                page-break-inside: avoid !important;
             }
             
             .tab-content:not(.active) {
@@ -387,6 +399,7 @@
                 box-sizing: border-box !important;
                 box-shadow: none !important; 
                 border-radius: 0 !important;
+                page-break-inside: avoid !important;
             }
 
             .printable-page {
@@ -401,7 +414,7 @@
                 text-align: center !important;
             }
 
-            /*   feladatok nyomtatása   */
+            /* feladatok nyomtatása */
             .math-grid {
                 display: grid !important;
                 grid-template-columns: 6.5cm 6.5cm !important; 
@@ -416,7 +429,7 @@
                 margin-left: 10px !important;
             }
 
-            /*   szorzótábla nyomtatása   */
+            /* szorzótábla nyomtatása */
             .multiplication-grid {
                 display: grid !important;
                 grid-template-columns: repeat(4, 1fr) !important; 
@@ -447,7 +460,7 @@
                 margin-bottom: 0.1rem !important;
             }
 
-            /*   számházak nyomtatása   */
+            /* számházak nyomtatása */
             .houses-grid {
                 display: grid !important;
                 grid-template-columns: repeat(5, 1fr) !important; 
@@ -534,6 +547,7 @@
             </div>
 
             <div class="printable-page" id="print-area-generator">
+                <!-- A név és dátum rész eltűnt képernyőről a CSS display: none beállítás miatt -->
                 <div class="page-header">
                     <div>Név: _______________________</div>
                     <div>Dátum: ________________</div>
