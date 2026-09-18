@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Játékos Matek Gyakorló</title>
+    <!-- Nunito betűtípus -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        /* CSS Változók */
+        :root {
+            --primary: #4A90E2;    /* kék a fő elemekhez */
+            --secondary: #FF6B6B;  /* piros a számházakhoz és nyomtatás gombhoz */
+            --accent: #FFD166;     /* sárga kiegészítő szín */
+            --green: #06D6A0;      /* zöld a generálás gombhoz */
+            --bg: #F8F9FA;         /* szürke háttér */
+            --text: #2B2D42;       /* sötétkékes szürke a szövegekhez */
+            --white: #FFFFFF;
+        }
+
+        /* reset */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh; /* Minimum 100% magasság, hogy a footer az alján maradjon */
+        }
+
+        /* Header, cím */
+        header {
+            background-color: var(--primary);
+            color: var(--white);
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            margin-bottom: 1rem;
+        }
+
+        /* --- NAV --- */
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background-color: rgba(255, 255, 255, 0.2);
+            border: 2px solid var(--white);
+            color: var(--white);
+            padding: 0.5rem 1.5rem;
+            font-size: 1.2rem;
+            font-weight: 700;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease; /* animáció hover és kattintás esetén */
+        }
+
+        .tab-btn:hover {
+            background-color: rgba(255, 255, 255, 0.4);
+        }
+
+        /* aktív fül fehér */
+        .tab-btn.active {
+            background-color: var(--white);
+            color: var(--primary);
+        }
+
+        /* --- main --- */
+        .container {
+            flex: 1; /* A tartalom kitölti a rendelkezésre álló helyet, letolva a footert */
+            width: 100%;
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .tab-content {
+            display: none;
+            background: var(--white);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+
+        /* csak az .active osztállyal rendelkező tartalom látszik */
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- VEZÉRLŐPULT --- */
+        .controls {
+            background-color: #f1f3f5;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .control-group h3 {
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+
+        .checkbox-group, .radio-group {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .checkbox-label, .radio-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        input[type="checkbox"], input[type="radio"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        /* --- GOMBOK --- */
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .btn {
+            padding: 0.8rem 2rem;
+            font-size: 1.2rem;
+            font-weight: 900;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            color: var(--white);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn-generate { background-color: var(--green); }
+        .btn-print { background-color: var(--secondary); }
+
+        /* --- NYOMTATHATÓ TERÜLETEK CSS --- */
+        .printable-page {
+            width: 100%;
+            background: white;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            border-bottom: 2px dashed #ccc;
+            padding-bottom: 1rem;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        /* feladatok elrendezése */
+        .math-grid {
+            display: grid;
+            grid-template-columns: 280px 280px;
+            justify-content: center;
+            gap: 2rem 5rem;
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 2rem auto;
+        }
+
+        .math-problem {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .math-problem .answer-box {
+            display: inline-block;
+            width: 100px;
+            height: 40px;
+            border-bottom: 3px solid var(--text);
+            margin-left: 15px;
+        }
+
+        /* szorzótábla elrendezése */
+        .multiplication-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .mul-table {
+            border: 2px solid var(--primary);
+            border-radius: 10px;
+            overflow: hidden; /* Hogy a h4 címe ne lógjon ki a kerekítésből */
+            background: #fff;
+        }
+
+        .mul-table h4 {
+            background: var(--primary);
+            color: white;
+            text-align: center;
+            padding: 0.5rem;
+            font-size: 1.2rem;
+        }
+
+        .mul-table ul {
+            list-style: none;
+            padding: 1rem;
+        }
+
+        .mul-table li {
+            font-size: 1.1rem;
+            text-align: center;
+            margin-bottom: 0.3rem;
+            font-weight: 700;
+        }
+
+        /* számházak elrendezése */
+        .houses-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2rem;
+        }
+
+        .house {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 150px;
+        }
+
+        /* CSS hack a tető megrajzolásához (háromszög) */
+        .house-roof {
+            width: 0;
+            height: 0;
+            border-left: 75px solid transparent; 
+            border-right: 75px solid transparent;
+            border-bottom: 75px solid var(--secondary);
+            position: relative;
+        }
+
+        /* szám a tetőben */
+        .house-roof span {
+            position: absolute;
+            top: 25px;
+            left: -15px;
+            width: 30px;
+            text-align: center;
+            color: white;
+            font-size: 1.8rem;
+            font-weight: 900;
+        }
+
+        /* a ház teste */
+        .house-body {
+            width: 130px;
+            background: white;
+            border: 3px solid var(--secondary);
+            border-top: none;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .house-row {
+            display: contents; 
+        }
+
+        .house-cell {
+            padding: 0.3rem;
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: 700;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .house-cell:nth-child(odd) {
+            border-right: 2px solid var(--secondary);
+        }
+
+        .house-row:last-child .house-cell {
+            border-bottom: none;
+        }
+
+        /* --- LÁBLÉC --- */
+        .site-footer {
+            text-align: center;
+            padding: 2rem 1rem;
+            color: #8d99ae; /* Visszafogott, halványszürke szín */
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        /* NYOMTATÁSI STÍLUSOK */
+        @media print {
+            /* Eltávolítjuk a böngésző alapértelmezett margóját,hogy mi oszthassuk be a teljes rendelkezésre álló felületet. */
+            @page {
+                size: A4 portrait;
+                margin: 0; 
+            }
+
+            body {
+                background: white;
+                font-size: 12pt;
+                color: black;
+                margin: 0;
+                padding: 0;
+                height: 100vh; 
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+            }
+
+            /* eltüntetünk mindent (gombok, fejlécek, lábléc), aminek nem kell a papírra kerülnie */
+            .no-print { display: none !important; }
+            
+            .container { 
+                margin: 0; 
+                padding: 0; 
+                width: 100%; 
+                box-shadow: none;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+            }
+            
+            /* csak az aktív fület nyomtatjuk */
+            .tab-content:not(.active) {
+                display: none !important;
+            }
+
+            .tab-content.active {
+                display: flex !important;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                width: 100%;
+                padding: 1.5cm;
+                box-sizing: border-box;
+                box-shadow: none; 
+                border-radius: 0;
+            }
+
+            .printable-page {
+                width: 100%;
+                max-width: 18cm;
+            }
+            
+            .print-title { 
+                display: block !important; 
+                margin-bottom: 1rem !important; 
+                font-size: 18pt;
+                text-align: center;
+            }
+
+            /* --- feladatok nyomtatása --- */
+            .math-grid {
+                grid-template-columns: 6.5cm 6.5cm; 
+                gap: 1.5rem 2.5cm; 
+                font-size: 18pt; 
+                margin-top: 1cm;
+                justify-content: center; 
+            }
+            
+            .math-problem .answer-box {
+                width: 2.5cm; 
+                margin-left: 10px;
+            }
+
+            /* --- szorzótábla nyomtatása --- */
+            .multiplication-grid {
+                grid-template-columns: repeat(4, 1fr); 
+                gap: 0.5cm; 
+                width: 100%;
+            }
+
+            .mul-table {
+                border-color: black;
+                page-break-inside: avoid; /* ne törje ketté a táblázatot az oldal alján */
+                border-width: 1px; 
+            }
+
+            .mul-table h4 {
+                background: #eee;
+                color: black;
+                border-bottom: 1px solid black;
+                padding: 0.2rem; 
+                font-size: 11pt; 
+            }
+
+            .mul-table ul {
+                padding: 0.5rem; 
+            }
+
+            .mul-table li {
+                font-size: 10pt; 
+                margin-bottom: 0.1rem;
+            }
+
+            /* --- számházak nyomtatása --- */
+            .houses-grid {
+                display: grid;
+                grid-template-columns: repeat(5, 1fr); 
+                gap: 0.5cm; 
+                justify-items: center;
+                width: 100%;
+            }
+
+            .house {
+                page-break-inside: avoid;
+                width: 100%; 
+                max-width: 3.5cm; 
+            }
+
+            .house-roof {
+                border-left: 1.75cm solid transparent; 
+                border-right: 1.75cm solid transparent;
+                border-bottom: 1.5cm solid #444; 
+            }
+
+            .house-roof span {
+                top: 0.5cm;
+                left: -15px; 
+                font-size: 14pt;
+                color: #fff;
+            }
+
+            .house-body {
+                width: 3cm; 
+                border-color: #444;
+                border-width: 2px;
+            }
+
+            .house-cell {
+                padding: 0.1rem; 
+                font-size: 10pt; 
+            }
+
+            .house-cell:nth-child(odd) {
+                border-right-color: #444;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HTML -->
+    <header class="no-print">
+        <h1>Matek Gyakorló</h1>
+        <div class="nav-tabs">
+            <button class="tab-btn active" onclick="openTab('tab-generator', this)">Gyakorló feladatok</button>
+            <button class="tab-btn" onclick="openTab('tab-multiplication', this)">Szorzótábla</button>
+            <button class="tab-btn" onclick="openTab('tab-decomposition', this)">Számok bontása</button>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- GYAKORLÓ FELADAT GENERÁTOR -->
+        <section id="tab-generator" class="tab-content active">
+            <div class="controls no-print">
+                <div class="control-group">
+                    <h3>Milyen műveleteket szeretnél gyakorolni?</h3>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label"><input type="checkbox" id="op-add" checked> Összeadás (+)</label>
+                        <label class="checkbox-label"><input type="checkbox" id="op-sub"> Kivonás (-)</label>
+                        <label class="checkbox-label"><input type="checkbox" id="op-mul"> Szorzás (×)</label>
+                        <label class="checkbox-label"><input type="checkbox" id="op-div"> Osztás (:)</label>
+                    </div>
+                </div>
+                
+                <div class="control-group">
+                    <h3>Melyik számkörben?</h3>
+                    <div class="radio-group">
+                        <!-- Csak az egyik választható a "name" attribútum miatt -->
+                        <label class="radio-label"><input type="radio" name="range" value="5"> 5-ös</label>
+                        <label class="radio-label"><input type="radio" name="range" value="10" checked> 10-es</label>
+                        <label class="radio-label"><input type="radio" name="range" value="20"> 20-as</label>
+                        <label class="radio-label"><input type="radio" name="range" value="100"> 100-as</label>
+                    </div>
+                </div>
+
+                <div class="btn-group">
+                    <!-- gombnyomásra JS függvény hívás -->
+                    <button class="btn btn-generate" onclick="generateProblems()">Új feladatok generálása</button>
+                    <!-- beépített nyomtatási ablak megnyitása -->
+                    <button class="btn btn-print" onclick="window.print()">Nyomtatás</button>
+                </div>
+            </div>
+
+            <!-- kimeneti terület, ez fog a papírra kerülni -->
+            <div class="printable-page" id="print-area-generator">
+                <div class="page-header">
+                    <div>Név: _______________________</div>
+                    <div>Dátum: ________________</div>
+                </div>
+                <!-- ide jön a 20 darab generált feladat -->
+                <div class="math-grid" id="math-grid"></div>
+            </div>
+        </section>
+
+        <!-- SZORZÓTÁBLA -->
+        <section id="tab-multiplication" class="tab-content">
+            <div class="controls no-print">
+                <button class="btn btn-print" onclick="window.print()">Szorzótábla Nyomtatása</button>
+            </div>
+            <div class="printable-page">
+                <!-- Ez a h2 csak nyomtatáskor jelenik meg a CSS miatt -->
+                <h2 class="print-title" style="display: none;">Szorzótábla</h2>
+                <!-- ide jönnek a táblák -->
+                <div class="multiplication-grid" id="multiplication-grid"></div>
+            </div>
+        </section>
+
+        <!-- SZÁMHÁZAK -->
+        <section id="tab-decomposition" class="tab-content">
+            <div class="controls no-print">
+                <button class="btn btn-print" onclick="window.print()">Számházak Nyomtatása</button>
+            </div>
+            <div class="printable-page">
+                <h2 class="print-title" style="display: none;">Számok bontása 1-től 10-ig</h2>
+                <!-- ide jönnek a házikók -->
+                <div class="houses-grid" id="houses-grid"></div>
+            </div>
+        </section>
+    </div>
+
+    <!-- LÁBLÉC -->
+    <footer class="site-footer no-print">
+        &copy; <span id="current-year"></span> Szalai
+    </footer>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        // Fülváltó logika: 
+        // 1. Megkeresi az összes fül tartalmát és eltünteti őket (leveszi az 'active' osztályt).
+        // 2. A gombokról is leveszi az aktív stílust.
+        // 3. Arra a fülre és gombra, amire kattintottunk, ráteszi az 'active' osztályt, így az fog látszódni.
+        function openTab(tabId, btn) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            
+            document.getElementById(tabId).classList.add('active');
+            btn.classList.add('active');
+        }
+
+        // Fisher-Yates "keverő" algoritmus
+        // Fog egy tömböt (listát), és véletlenszerű sorrendbe teszi az elemeit, mintha egy pakli kártyát kevernénk meg.
+        
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                // Kicseréljük az i-edik és a j-edik elemet
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // matek-generáló: megadod neki a számkört és a művelet típusát, ő pedig legenerálja az összes lehetséges, szabályos matematikai feladatot egy listába.
+        
+        function getProblemsByType(range, type) {
+            let possibleProblems = [];
+
+            if (type === 'add') {
+                // Összeadás: (a + b = c). A végeredmény (a+b) nem lehet nagyobb a számkörnél.
+                for (let a = 0; a <= range; a++) {
+                    for (let b = 0; b <= range - a; b++) {
+                        possibleProblems.push(`${a} + ${b} =`);
+                    }
+                }
+            } else if (type === 'sub') {
+                // Kivonás: az eredmény nem lehet negatív, tehát b sosem nagyobb a-nál.
+                for (let a = 0; a <= range; a++) {
+                    for (let b = 0; b <= a; b++) {
+                        possibleProblems.push(`${a} - ${b} =`);
+                    }
+                }
+            } else if (type === 'mul') {
+                // 100-as számkörnél a klasszikus 10x10-es szorzótáblát kérdezzük
+                if (range === 100) {
+                    for (let a = 0; a <= 10; a++) {
+                        for (let b = 0; b <= 10; b++) {
+                            possibleProblems.push(`${a} × ${b} =`);
+                        }
+                    }
+                } else {
+                    // úgy szorzunk, hogy az eredmény max a számkör
+                    for (let a = 0; a <= range; a++) {
+                        for (let b = 0; b <= range; b++) {
+                            if (a * b <= range) {
+                                possibleProblems.push(`${a} × ${b} =`);
+                            }
+                        }
+                    }
+                }
+            } else if (type === 'div') {
+                // Osztás (osztó nem lehet nulla)
+                if (range === 100) {
+                    // 100-as osztás: a 10x10-es tábla "visszafele", tehát b megy 1-10-ig, és az eredmény is 1-10
+                    for (let b = 1; b <= 10; b++) {
+                        for (let res = 0; res <= 10; res++) {
+                            let a = b * res; // A kiinduló szám (osztandó)
+                            possibleProblems.push(`${a} : ${b} =`);
+                        }
+                    }
+                } else {
+                    // Kisebb számkör
+                    for (let divisor = 1; divisor <= range; divisor++) {
+                        for (let res = 0; res <= range; res++) {
+                            if (divisor * res <= range) {
+                                let a = divisor * res;
+                                possibleProblems.push(`${a} : ${divisor} =`);
+                            }
+                        }
+                    }
+                }
+            }
+
+            // összekeverjük
+            return shuffleArray(possibleProblems); 
+        }
+
+        // Fő funkció: Ez fut le, amikor rákattintasz az "Új feladatok generálása" gombra.
+        // Feladata: A pipák alapján összegyűjt 20 egyedi feladatot, arányosan elosztva a műveletek közt.
+        
+        function generateProblems() {
+            // 1. Összeszedjük, mit pipált be a felhasználó
+            const types = [];
+            if (document.getElementById('op-add').checked) types.push('add');
+            if (document.getElementById('op-sub').checked) types.push('sub');
+            if (document.getElementById('op-mul').checked) types.push('mul');
+            if (document.getElementById('op-div').checked) types.push('div');
+
+            // Biztonsági háló: Ha a gyerek mindent kipipálatlanná tesz, 
+            // automatikusan bekapcsoljuk az összeadást, hogy ne haljon le a generátor.
+            if (types.length === 0) {
+                document.getElementById('op-add').checked = true;
+                return generateProblems(); // Újraindítjuk a folyamatot
+            }
+
+            // 2. Lekérjük a számkört (5, 10, 20 vagy 100)
+            const range = parseInt(document.querySelector('input[name="range"]:checked').value);
+            
+            // 3. Kiszámoljuk a "kvótákat" (Hány feladat jusson egy műveletre, hogy pontosan 20 legyen?)
+            const totalNeeded = 20;
+            const baseCount = Math.floor(totalNeeded / types.length); // Alap adag műveletenként (pl. 3 műveletnél 6)
+            let remainder = totalNeeded % types.length;               // Maradék feladatok száma (pl. 20/3 = maradék 2)
+
+            let finalSelectedProblems = [];
+
+            // 4. Végigmegyünk a bepipált művelettípusokon és feltöltjük a végső listát
+            types.forEach(type => {
+                // Legeneráltatjuk az összes létező kevert feladatot abból a típusból
+                let allOfThisType = getProblemsByType(range, type);
+                
+                // Kiszámoljuk, pontosan hány kell ebből a típusból. Ha van maradék, hozzáadunk egyet.
+                let amountToGet = baseCount + (remainder > 0 ? 1 : 0);
+                if (remainder > 0) remainder--; // A maradék csökkentése
+
+                let selectedForThisType = [];
+                
+                // Ellenőrizzük, hogy létezik-e egyáltalán ennyi egyedi feladat ebből a műveletből
+                if (allOfThisType.length >= amountToGet) {
+                    // Ha igen, simán kivágjuk az első X darabot
+                    selectedForThisType = allOfThisType.slice(0, amountToGet);
+                } else {
+                    // Ha túl kicsi a számkör (pl. 5-ös számkör csak szorzással), kénytelenek vagyunk duplikálni
+                    selectedForThisType = [...allOfThisType];
+                    let index = 0;
+                    while (selectedForThisType.length < amountToGet) {
+                        selectedForThisType.push(allOfThisType[index % allOfThisType.length]);
+                        index++;
+                    }
+                }
+                
+                // Beletesszük a közös kosárba
+                finalSelectedProblems.push(...selectedForThisType);
+            });
+
+            // 5. Az egész közös kosarat ismét összekeverjük, hogy ne blokkosítva jelenjenek meg a papíron
+            finalSelectedProblems = shuffleArray(finalSelectedProblems);
+
+            // 6. Kiürítjük a HTML tárolót
+            const grid = document.getElementById('math-grid');
+            grid.innerHTML = '';
+
+            // 7. Betesszük a 20 feladatot a HTML-be egy szép struktúrában
+            finalSelectedProblems.forEach(str => {
+                const divEl = document.createElement('div');
+                divEl.className = 'math-problem';
+                // Feladat szövege, mellé pedig az üres vonal a válasznak
+                divEl.innerHTML = `<span>${str}</span><span class="answer-box"></span>`;
+                grid.appendChild(divEl);
+            });
+        }
+
+        // Szorzótábla rajzoló funkció (1-10-ig fixen)
+        
+        function buildMultiplicationTable() {
+            const container = document.getElementById('multiplication-grid');
+            
+            // Külső ciklus az 1-es, 2-es stb. táblázatoknak
+            for (let i = 1; i <= 10; i++) {
+                const tableDiv = document.createElement('div');
+                tableDiv.className = 'mul-table';
+                
+                // Összeállítjuk a táblázat HTML-jét (Címsor)
+                let listHTML = `<h4>${i}-es szorzótábla</h4><ul>`;
+                
+                // Belső ciklus, kiszámolja a sorokat (1x, 2x, stb.)
+                for (let j = 1; j <= 10; j++) {
+                    listHTML += `<li>${j} × ${i} = ${j * i}</li>`;
+                }
+                listHTML += `</ul>`; // Lista vége
+                
+                tableDiv.innerHTML = listHTML;
+                container.appendChild(tableDiv);
+            }
+        }
+
+        // Számházak rajzoló funkciója (1-10-ig mutatja a bontásokat)
+        
+        function buildNumberHouses() {
+            const container = document.getElementById('houses-grid');
+            
+            // Végigmegyünk 1-től 10-ig
+            for (let target = 1; target <= 10; target++) {
+                const houseDiv = document.createElement('div');
+                houseDiv.className = 'house';
+
+                // Ház tető létrehozása a "célszámmal" (ami a bontás végeredménye)
+                let html = `
+                    <div class="house-roof">
+                        <span>${target}</span>
+                    </div>
+                    <div class="house-body">
+                `;
+
+                // Emeletek megépítése. Kezdjük 0-tól egészen a célszámig.
+                for (let i = 0; i <= target; i++) {
+                    let j = target - i; // A párja, amivel együtt kiadja a célszámot
+                    html += `
+                        <div class="house-row">
+                            <div class="house-cell">${i}</div>
+                            <div class="house-cell">${j}</div>
+                        </div>
+                    `;
+                }
+
+                html += `</div>`; // Ház test vége
+                houseDiv.innerHTML = html;
+                container.appendChild(houseDiv);
+            }
+        }
+
+        // Automatikus indítás! 
+        // Amikor az oldal betöltődik a böngészőbe, lefuttatjuk a 3 generáló függvényt.
+        // Ennek köszönhetően sosem üres oldalt kap a felhasználó.
+        
+        window.onload = () => {
+            generateProblems();
+            buildMultiplicationTable();
+            buildNumberHouses();
+            
+            // Aktuális év beállítása a láblécben automatikusan
+            document.getElementById('current-year').textContent = new Date().getFullYear();
+        };
+    </script>
+</body>
+</html>
