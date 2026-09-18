@@ -313,6 +313,52 @@
         .house-row:last-child .house-cell {
             border-bottom: none;
         }
+		
+		/*   MOBIL ÉS TABLET OPTIMALIZÁLÁS   */
+        @media screen and (max-width: 768px) {
+            /* tableten és mobilon egy oszlopos legyen a feladatsor */
+            .math-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+                font-size: 1.6rem;
+            }
+            /* a Név és Dátum mezők egymás alá kerülnek */
+            .page-header {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            h1 {
+                font-size: 2rem;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            /* kisebb telefonokon a gombok és fülek kitöltik a képernyőt a könnyebb érintésért */
+            .btn-group {
+                flex-direction: column;
+            }
+            .btn {
+                width: 100%;
+            }
+            .nav-tabs {
+                flex-direction: column;
+            }
+            .tab-btn {
+                width: 100%;
+            }
+            /* rövidebb válaszvonal, hogy a hosszabb feladatok is gond nélkül kiférjenek */
+            .math-problem .answer-box {
+                width: 70px; 
+                margin-left: 10px;
+            }
+            /* kisebb térközök, hogy több hely maradjon a tartalomnak */
+            .controls {
+                padding: 1rem;
+            }
+            .tab-content {
+                padding: 1.5rem 1rem;
+            }
+        }
 
         /*   LÁBLÉC   */
         .site-footer {
