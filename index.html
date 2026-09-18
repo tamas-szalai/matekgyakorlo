@@ -4,10 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Matek Gyakorló</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
-    
+
     <style>
-        /* CSS Változók */
         :root {
             --primary: #4A90E2;
             --secondary: #FF6B6B;
@@ -16,13 +17,19 @@
             --bg: #F8F9FA;
             --text: #2B2D42;
             --white: #FFFFFF;
+            --muted: #8d99ae;
+            --panel: #f1f3f5;
+            --shadow: rgba(0, 0, 0, 0.08);
         }
 
-        /* reset */
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
         }
 
         body {
@@ -30,88 +37,100 @@
             background-color: var(--bg);
             color: var(--text);
             line-height: 1.6;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
-            min-height: 100vh;
         }
 
-        /* Header */
+        button, input {
+            font: inherit;
+        }
+
+        button:focus-visible,
+        input:focus-visible,
+        label:focus-within {
+            outline: 3px solid rgba(74, 144, 226, 0.35);
+            outline-offset: 3px;
+        }
+
         header {
-            background-color: var(--primary);
+            background: linear-gradient(135deg, var(--primary), #5fa2ee);
             color: var(--white);
-            padding: 1.5rem;
+            padding: 1.5rem 1rem;
             text-align: center;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
 
         h1 {
-            font-size: 2.5rem;
+            font-size: clamp(2rem, 3vw, 3rem);
             font-weight: 900;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
             margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.15);
         }
 
-        /* NAV */
         .nav-tabs {
             display: flex;
             justify-content: center;
-            gap: 1rem;
+            gap: 0.75rem;
             flex-wrap: wrap;
         }
 
         .tab-btn {
-            background-color: rgba(255, 255, 255, 0.2);
-            border: 2px solid var(--white);
+            background: rgba(255, 255, 255, 0.18);
             color: var(--white);
-            padding: 0.5rem 1.5rem;
-            font-size: 1.2rem;
+            border: 2px solid rgba(255, 255, 255, 0.85);
+            border-radius: 999px;
+            padding: 0.7rem 1.4rem;
+            font-size: 1.1rem;
             font-weight: 700;
-            border-radius: 30px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
         }
 
         .tab-btn:hover {
-            background-color: rgba(255, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.28);
+            transform: translateY(-1px);
         }
 
         .tab-btn.active {
-            background-color: var(--white);
+            background: var(--white);
             color: var(--primary);
         }
 
-        /* main */
         .container {
             flex: 1;
-            width: 100%;
-            max-width: 1000px;
+            width: min(1000px, calc(100% - 2rem));
             margin: 2rem auto;
-            padding: 0 1rem;
         }
 
         .tab-content {
             display: none;
             background: var(--white);
-            border-radius: 15px;
+            border-radius: 18px;
+            box-shadow: 0 12px 25px var(--shadow);
             padding: 2rem;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
         }
 
         .tab-content.active {
             display: block;
-            animation: fadeIn 0.5s;
+            animation: fadeIn 0.35s ease;
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        /* VEZÉRLŐPULT */
         .controls {
-            background-color: #f1f3f5;
+            background: var(--panel);
+            border-radius: 12px;
             padding: 1.5rem;
-            border-radius: 10px;
             margin-bottom: 2rem;
             display: flex;
             flex-direction: column;
@@ -119,94 +138,115 @@
         }
 
         .control-group h3 {
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.75rem;
             color: var(--primary);
+            font-size: 1.3rem;
         }
 
-        .checkbox-group, .radio-group {
+        .checkbox-group,
+        .radio-group {
             display: flex;
-            gap: 1.5rem;
+            gap: 1.25rem 1.5rem;
             flex-wrap: wrap;
         }
 
-        .checkbox-label, .radio-label {
-            display: flex;
+        .checkbox-label,
+        .radio-label {
+            display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
-            font-size: 1.2rem;
+            gap: 0.65rem;
+            font-size: 1.1rem;
             font-weight: 700;
             cursor: pointer;
+            user-select: none;
         }
 
-        input[type="checkbox"], input[type="radio"] {
+        input[type="checkbox"],
+        input[type="radio"] {
             width: 20px;
             height: 20px;
             cursor: pointer;
         }
 
-        /* GOMBOK */
         .btn-group {
             display: flex;
             gap: 1rem;
-            margin-top: 1rem;
+            flex-wrap: wrap;
         }
 
         .btn {
-            padding: 0.8rem 2rem;
-            font-size: 1.2rem;
-            font-weight: 900;
             border: none;
-            border-radius: 30px;
-            cursor: pointer;
+            border-radius: 999px;
+            padding: 0.85rem 1.8rem;
+            font-size: 1.1rem;
+            font-weight: 900;
             color: var(--white);
-            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
         .btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
         }
 
-        .btn-generate { background-color: var(--green); }
-        .btn-print { background-color: var(--secondary); }
+        .btn-generate {
+            background-color: var(--green);
+        }
 
-        /* NYOMTATHATÓ TERÜLETEK CSS */
+        .btn-print {
+            background-color: var(--secondary);
+        }
+
+        .status-message {
+            min-height: 1.2rem;
+            margin-top: 0.2rem;
+            color: var(--primary);
+            font-weight: 700;
+        }
+
         .printable-page {
             width: 100%;
             background: white;
         }
 
-        /* Alapértelmezetten elrejtjük a fejlécet képernyőn */
         .page-header {
-            display: none; 
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px dashed #ccc;
+            padding-bottom: 1rem;
+            font-size: 1.1rem;
+            font-weight: 700;
         }
 
-        /* feladatok elrendezése */
         .math-grid {
             display: grid;
-            grid-template-columns: 280px 280px;
+            grid-template-columns: repeat(2, minmax(220px, 1fr));
             justify-content: center;
-            gap: 2rem 5rem;
-            font-size: 2rem;
+            gap: 2rem 4rem;
+            font-size: clamp(1.5rem, 2vw, 2rem);
             font-weight: 700;
-            margin: 2rem auto;
+            margin: 0 auto;
         }
 
         .math-problem {
             display: flex;
             align-items: center;
             justify-content: space-between;
+            gap: 1rem;
         }
 
         .math-problem .answer-box {
             display: inline-block;
-            width: 100px;
+            width: 110px;
             height: 40px;
             border-bottom: 3px solid var(--text);
-            margin-left: 15px;
+            margin-left: 0.75rem;
+            flex-shrink: 0;
         }
 
-        /* szorzótábla elrendezése */
         .multiplication-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -215,17 +255,18 @@
 
         .mul-table {
             border: 2px solid var(--primary);
-            border-radius: 10px;
+            border-radius: 12px;
             overflow: hidden;
             background: #fff;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.04);
         }
 
         .mul-table h4 {
             background: var(--primary);
             color: white;
             text-align: center;
-            padding: 0.5rem;
-            font-size: 1.2rem;
+            padding: 0.6rem;
+            font-size: 1.15rem;
         }
 
         .mul-table ul {
@@ -234,13 +275,12 @@
         }
 
         .mul-table li {
-            font-size: 1.1rem;
             text-align: center;
-            margin-bottom: 0.3rem;
+            font-size: 1.08rem;
             font-weight: 700;
+            margin-bottom: 0.3rem;
         }
 
-        /* számházak elrendezése */
         .houses-grid {
             display: flex;
             flex-wrap: wrap;
@@ -258,7 +298,7 @@
         .house-roof {
             width: 0;
             height: 0;
-            border-left: 75px solid transparent; 
+            border-left: 75px solid transparent;
             border-right: 75px solid transparent;
             border-bottom: 75px solid var(--secondary);
             position: relative;
@@ -266,7 +306,7 @@
 
         .house-roof span {
             position: absolute;
-            top: 25px;
+            top: 28px;
             left: -15px;
             width: 30px;
             text-align: center;
@@ -281,21 +321,21 @@
             border: 3px solid var(--secondary);
             border-top: none;
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: repeat(2, 1fr);
         }
 
         .house-row {
-            display: contents; 
+            display: contents;
         }
 
         .house-cell {
-            padding: 0.3rem;
+            padding: 0.4rem;
             text-align: center;
-            font-size: 1.2rem;
+            font-size: 1.15rem;
             font-weight: 700;
             border-bottom: 1px solid #ddd;
         }
-        
+
         .house-cell:nth-child(odd) {
             border-right: 2px solid var(--secondary);
         }
@@ -304,221 +344,192 @@
             border-bottom: none;
         }
 
-        /* LÁBLÉC */
         .site-footer {
             text-align: center;
-            padding: 2rem 1rem;
-            color: #8d99ae;
+            padding: 2rem 1rem 2.5rem;
+            color: var(--muted);
             font-size: 1rem;
             font-weight: 700;
         }
 
-        /* MOBIL ÉS TABLET OPTIMALIZÁLÁS */
         @media (max-width: 768px) {
+            .tab-content {
+                padding: 1.25rem;
+            }
+
             .math-grid {
                 grid-template-columns: 1fr;
-                gap: 1.5rem;
+                gap: 1.25rem;
             }
+
             .btn-group {
                 flex-direction: column;
             }
+
             .btn {
                 width: 100%;
             }
-            .checkbox-group, .radio-group {
+
+            .checkbox-group,
+            .radio-group {
                 flex-direction: column;
-                gap: 1rem;
+                gap: 0.8rem;
+            }
+
+            .page-header {
+                flex-direction: column;
+                gap: 0.5rem;
+                align-items: flex-start;
             }
         }
 
-        /* NYOMTATÁSI STÍLUSOK */
         @media print {
             @page {
                 size: A4 portrait;
-                margin: 0; 
+                margin: 10mm;
             }
 
-            /* A dupla oldal elkerüléséért a html-t és body-t maximáljuk 294mm-ben */
             html, body {
                 background: white;
-                font-size: 12pt;
                 color: black;
-                margin: 0 !important;
-                padding: 0 !important;
-                width: 210mm !important;
-                height: 294mm !important; 
-                max-height: 294mm !important;
-                display: flex !important;
-                flex-direction: column !important;
-                align-items: center !important;
-                justify-content: center !important;
-                overflow: hidden !important;
-                box-sizing: border-box !important;
-                page-break-after: avoid !important;
-                page-break-before: avoid !important;
+                margin: 0;
+                padding: 0;
+                width: 100%;
+                height: auto;
             }
 
-            .no-print { display: none !important; }
-            
-            /* Csak nyomtatáskor jelenítjük meg a Név / Dátum részt */
-            .page-header {
-                display: flex !important;
-                justify-content: space-between !important;
-                width: 100% !important;
-                margin-bottom: 1cm !important;
-                border-bottom: 2px dashed #ccc !important;
-                padding-bottom: 0.5cm !important;
-                font-size: 14pt !important;
-                font-weight: 700 !important;
+            .no-print {
+                display: none !important;
             }
 
-            .container { 
-                margin: 0 !important; 
-                padding: 0 !important; 
-                width: 100% !important; 
-                max-width: 210mm !important;
-                box-shadow: none !important;
-                display: flex !important;
-                flex-direction: column !important;
-                justify-content: center !important;
-                align-items: center !important;
-                page-break-inside: avoid !important;
+            .container {
+                width: 100%;
+                margin: 0;
             }
-            
+
             .tab-content:not(.active) {
                 display: none !important;
             }
 
             .tab-content.active {
                 display: flex !important;
-                flex-direction: column !important;
-                justify-content: center !important;
-                align-items: center !important;
-                width: 100% !important;
-                padding: 1.5cm !important;
-                box-sizing: border-box !important;
-                box-shadow: none !important; 
-                border-radius: 0 !important;
-                page-break-inside: avoid !important;
+                flex-direction: column;
+                justify-content: center;
+                align-items: stretch;
+                width: 100%;
+                padding: 0;
+                box-shadow: none;
+                border-radius: 0;
             }
 
             .printable-page {
-                width: 100% !important;
-                max-width: 18cm !important;
-            }
-            
-            .print-title { 
-                display: block !important; 
-                margin-bottom: 1rem !important; 
-                font-size: 18pt !important;
-                text-align: center !important;
+                width: 100%;
+                max-width: 18cm;
+                margin: 0 auto;
             }
 
-            /* feladatok nyomtatása */
+            .page-header {
+                display: flex !important;
+                justify-content: space-between;
+                width: 100%;
+                margin-bottom: 1rem;
+                border-bottom: 2px dashed #ccc;
+                padding-bottom: 0.5rem;
+                font-size: 12pt;
+            }
+
             .math-grid {
-                display: grid !important;
-                grid-template-columns: 6.5cm 6.5cm !important; 
-                gap: 1.5rem 2.5cm !important; 
-                font-size: 18pt !important; 
-                margin-top: 1cm !important;
-                justify-content: center !important; 
-            }
-            
-            .math-problem .answer-box {
-                width: 2.5cm !important; 
-                margin-left: 10px !important;
+                grid-template-columns: 6.5cm 6.5cm;
+                gap: 1rem 2.5cm;
+                font-size: 18pt;
+                margin-top: 1rem;
             }
 
-            /* szorzótábla nyomtatása */
+            .math-problem .answer-box {
+                width: 2.5cm;
+                margin-left: 10px;
+            }
+
             .multiplication-grid {
-                display: grid !important;
-                grid-template-columns: repeat(4, 1fr) !important; 
-                gap: 0.5cm !important; 
-                width: 100% !important;
+                grid-template-columns: repeat(4, 1fr);
+                gap: 0.5cm;
+                width: 100%;
             }
 
             .mul-table {
-                border-color: black !important;
-                page-break-inside: avoid !important; 
-                border-width: 1px !important; 
+                border-color: black;
+                border-width: 1px;
+                break-inside: avoid;
             }
 
             .mul-table h4 {
-                background: #eee !important;
-                color: black !important;
-                border-bottom: 1px solid black !important;
-                padding: 0.2rem !important; 
-                font-size: 11pt !important; 
-            }
-
-            .mul-table ul {
-                padding: 0.5rem !important; 
+                background: #eee;
+                color: black;
+                border-bottom: 1px solid black;
+                padding: 0.2rem;
+                font-size: 11pt;
             }
 
             .mul-table li {
-                font-size: 10pt !important; 
-                margin-bottom: 0.1rem !important;
+                font-size: 10pt;
             }
 
-            /* számházak nyomtatása */
             .houses-grid {
-                display: grid !important;
-                grid-template-columns: repeat(5, 1fr) !important; 
-                gap: 0.5cm !important; 
-                justify-items: center !important;
-                width: 100% !important;
+                display: grid;
+                grid-template-columns: repeat(5, 1fr);
+                gap: 0.5cm;
+                justify-items: center;
+                width: 100%;
             }
 
             .house {
-                page-break-inside: avoid !important;
-                width: 100% !important; 
-                max-width: 3.5cm !important; 
+                break-inside: avoid;
+                width: 100%;
+                max-width: 3.5cm;
             }
 
             .house-roof {
-                border-left: 1.75cm solid transparent !important; 
-                border-right: 1.75cm solid transparent !important;
-                border-bottom: 1.5cm solid #444 !important; 
+                border-left: 1.75cm solid transparent;
+                border-right: 1.75cm solid transparent;
+                border-bottom: 1.5cm solid #444;
             }
 
             .house-roof span {
-                top: 0.5cm !important;
-                left: -15px !important; 
-                font-size: 14pt !important;
-                color: #fff !important;
+                top: 0.5cm;
+                left: -15px;
+                font-size: 14pt;
+                color: white;
             }
 
             .house-body {
-                width: 3cm !important; 
-                border-color: #444 !important;
-                border-width: 2px !important;
+                width: 3cm;
+                border-color: #444;
+                border-width: 2px;
             }
 
             .house-cell {
-                padding: 0.1rem !important; 
-                font-size: 10pt !important; 
+                padding: 0.1rem;
+                font-size: 10pt;
             }
 
             .house-cell:nth-child(odd) {
-                border-right-color: #444 !important;
+                border-right-color: #444;
             }
         }
     </style>
 </head>
 <body>
-
     <header class="no-print">
         <h1>Matek Gyakorló</h1>
-        <div class="nav-tabs">
-            <button class="tab-btn active" onclick="openTab('tab-generator', this)">Gyakorló feladatok</button>
-            <button class="tab-btn" onclick="openTab('tab-multiplication', this)">Szorzótábla</button>
-            <button class="tab-btn" onclick="openTab('tab-decomposition', this)">Számok bontása</button>
-        </div>
+        <nav class="nav-tabs" aria-label="Főmenü">
+            <button class="tab-btn active" type="button" data-tab="tab-generator" aria-controls="tab-generator" aria-selected="true">Gyakorló feladatok</button>
+            <button class="tab-btn" type="button" data-tab="tab-multiplication" aria-controls="tab-multiplication" aria-selected="false">Szorzótábla</button>
+            <button class="tab-btn" type="button" data-tab="tab-decomposition" aria-controls="tab-decomposition" aria-selected="false">Számok bontása</button>
+        </nav>
     </header>
 
     <div class="container">
-        <!-- GYAKORLÓ FELADAT GENERÁTOR -->
-        <section id="tab-generator" class="tab-content active">
+        <section id="tab-generator" class="tab-content active" role="tabpanel" aria-label="Gyakorló feladatok">
             <div class="controls no-print">
                 <div class="control-group">
                     <h3>Milyen műveleteket szeretnél gyakorolni?</h3>
@@ -529,7 +540,7 @@
                         <label class="checkbox-label"><input type="checkbox" id="op-div"> Osztás (:)</label>
                     </div>
                 </div>
-                
+
                 <div class="control-group">
                     <h3>Melyik számkörben?</h3>
                     <div class="radio-group">
@@ -541,13 +552,14 @@
                 </div>
 
                 <div class="btn-group">
-                    <button class="btn btn-generate" onclick="generateProblems()">Új feladatok generálása</button>
-                    <button class="btn btn-print" onclick="window.print()">Nyomtatás</button>
+                    <button class="btn btn-generate" type="button" id="generate-btn">Új feladatok generálása</button>
+                    <button class="btn btn-print" type="button" id="print-btn">Nyomtatás</button>
                 </div>
+
+                <div class="status-message" id="status-message" aria-live="polite"></div>
             </div>
 
             <div class="printable-page" id="print-area-generator">
-                <!-- A név és dátum rész eltűnt képernyőről a CSS display: none beállítás miatt -->
                 <div class="page-header">
                     <div>Név: _______________________</div>
                     <div>Dátum: ________________</div>
@@ -556,10 +568,9 @@
             </div>
         </section>
 
-        <!-- SZORZÓTÁBLA -->
-        <section id="tab-multiplication" class="tab-content">
+        <section id="tab-multiplication" class="tab-content" role="tabpanel" aria-label="Szorzótábla">
             <div class="controls no-print">
-                <button class="btn btn-print" onclick="window.print()">Szorzótábla Nyomtatása</button>
+                <button class="btn btn-print" type="button" id="print-mult-btn">Szorzótábla Nyomtatása</button>
             </div>
             <div class="printable-page">
                 <h2 class="print-title" style="display: none;">Szorzótábla</h2>
@@ -567,10 +578,9 @@
             </div>
         </section>
 
-        <!-- SZÁMHÁZAK -->
-        <section id="tab-decomposition" class="tab-content">
+        <section id="tab-decomposition" class="tab-content" role="tabpanel" aria-label="Számok bontása">
             <div class="controls no-print">
-                <button class="btn btn-print" onclick="window.print()">Számházak Nyomtatása</button>
+                <button class="btn btn-print" type="button" id="print-houses-btn">Számházak Nyomtatása</button>
             </div>
             <div class="printable-page">
                 <h2 class="print-title" style="display: none;">Számok bontása 1-től 10-ig</h2>
@@ -579,34 +589,22 @@
         </section>
     </div>
 
-    <!-- LÁBLÉC -->
     <footer class="site-footer no-print">
         &copy; <span id="current-year"></span> thomasszalai
     </footer>
 
-    <!-- JAVASCRIPT -->
     <script>
-        // fülváltó logika
-        function openTab(tabId, btn) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-            
-            document.getElementById(tabId).classList.add('active');
-            btn.classList.add('active');
-        }
-
-        // Fisher-Yates "keverő" algoritmus
         function shuffleArray(array) {
-            for (let i = array.length - 1; i > 0; i--) {
+            const items = [...array];
+            for (let i = items.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
+                [items[i], items[j]] = [items[j], items[i]];
             }
-            return array;
+            return items;
         }
 
-        // matek-generáló
         function getProblemsByType(range, type) {
-            let possibleProblems = [];
+            const possibleProblems = [];
 
             if (type === 'add') {
                 for (let a = 0; a <= range; a++) {
@@ -640,7 +638,7 @@
                 if (range === 100) {
                     for (let b = 1; b <= 10; b++) {
                         for (let res = 0; res <= 10; res++) {
-                            let a = b * res;
+                            const a = b * res;
                             possibleProblems.push(`${a} : ${b} =`);
                         }
                     }
@@ -648,92 +646,108 @@
                     for (let divisor = 1; divisor <= range; divisor++) {
                         for (let res = 0; res <= range; res++) {
                             if (divisor * res <= range) {
-                                let a = divisor * res;
+                                const a = divisor * res;
                                 possibleProblems.push(`${a} : ${divisor} =`);
                             }
                         }
                     }
                 }
             }
-            return shuffleArray(possibleProblems); 
+
+            return shuffleArray(possibleProblems);
         }
 
-        // Fő funkció
-        function generateProblems() {
-            const types = [];
-            if (document.getElementById('op-add').checked) types.push('add');
-            if (document.getElementById('op-sub').checked) types.push('sub');
-            if (document.getElementById('op-mul').checked) types.push('mul');
-            if (document.getElementById('op-div').checked) types.push('div');
+        function distributeTotal(typesCount, totalNeeded) {
+            const base = Math.floor(totalNeeded / typesCount);
+            const remainder = totalNeeded % typesCount;
+            return Array.from({ length: typesCount }, (_, index) => base + (index < remainder ? 1 : 0));
+        }
 
-            if (types.length === 0) {
-                document.getElementById('op-add').checked = true;
-                return generateProblems();
+        function pickProblems(pool, amount) {
+            if (!pool.length) {
+                return [];
             }
 
-            const range = parseInt(document.querySelector('input[name="range"]:checked').value);
+            const available = [...pool];
+            const result = [];
+            const takeCount = Math.min(amount, available.length);
+
+            while (result.length < takeCount) {
+                const randomIndex = Math.floor(Math.random() * available.length);
+                const [selected] = available.splice(randomIndex, 1);
+                result.push(selected);
+            }
+
+            return result;
+        }
+
+        function generateProblems() {
+            const selectedTypes = [];
+            if (document.getElementById('op-add').checked) selectedTypes.push('add');
+            if (document.getElementById('op-sub').checked) selectedTypes.push('sub');
+            if (document.getElementById('op-mul').checked) selectedTypes.push('mul');
+            if (document.getElementById('op-div').checked) selectedTypes.push('div');
+
+            if (!selectedTypes.length) {
+                document.getElementById('op-add').checked = true;
+                selectedTypes.push('add');
+                setStatusMessage('Nincs kiválasztott művelet, ezért az összeadás lett bekapcsolva.');
+            } else {
+                setStatusMessage('');
+            }
+
+            const range = Number(document.querySelector('input[name="range"]:checked').value);
             const totalNeeded = 20;
-            const baseCount = Math.floor(totalNeeded / types.length);
-            let remainder = totalNeeded % types.length;
+            const counts = distributeTotal(selectedTypes.length, totalNeeded);
+            const finalSelectedProblems = [];
 
-            let finalSelectedProblems = [];
-
-            types.forEach(type => {
-                let allOfThisType = getProblemsByType(range, type);
-                let amountToGet = baseCount + (remainder > 0 ? 1 : 0);
-                if (remainder > 0) remainder--;
-
-                let selectedForThisType = [];
-                
-                if (allOfThisType.length >= amountToGet) {
-                    selectedForThisType = allOfThisType.slice(0, amountToGet);
-                } else {
-                    selectedForThisType = [...allOfThisType];
-                    let index = 0;
-                    while (selectedForThisType.length < amountToGet) {
-                        selectedForThisType.push(allOfThisType[index % allOfThisType.length]);
-                        index++;
-                    }
-                }
-                finalSelectedProblems.push(...selectedForThisType);
+            selectedTypes.forEach((type, index) => {
+                const allProblems = getProblemsByType(range, type);
+                const problemCount = counts[index];
+                finalSelectedProblems.push(...pickProblems(allProblems, problemCount));
             });
-
-            finalSelectedProblems = shuffleArray(finalSelectedProblems);
 
             const grid = document.getElementById('math-grid');
             grid.innerHTML = '';
 
-            finalSelectedProblems.forEach(str => {
+            shuffleArray(finalSelectedProblems).forEach((problemText) => {
                 const divEl = document.createElement('div');
                 divEl.className = 'math-problem';
-                divEl.innerHTML = `<span>${str}</span><span class="answer-box"></span>`;
+                divEl.innerHTML = `<span>${problemText}</span><span class="answer-box" aria-hidden="true"></span>`;
                 grid.appendChild(divEl);
             });
         }
 
-        // szorzótábla rajzoló funkció
+        function setStatusMessage(message) {
+            const target = document.getElementById('status-message');
+            if (target) {
+                target.textContent = message;
+            }
+        }
+
         function buildMultiplicationTable() {
             const container = document.getElementById('multiplication-grid');
-            
+            container.innerHTML = '';
+
             for (let i = 1; i <= 10; i++) {
                 const tableDiv = document.createElement('div');
                 tableDiv.className = 'mul-table';
-                
+
                 let listHTML = `<h4>${i}-es szorzótábla</h4><ul>`;
                 for (let j = 1; j <= 10; j++) {
                     listHTML += `<li>${j} × ${i} = ${j * i}</li>`;
                 }
                 listHTML += `</ul>`;
-                
+
                 tableDiv.innerHTML = listHTML;
                 container.appendChild(tableDiv);
             }
         }
 
-        // számházak rajzoló funkciója
         function buildNumberHouses() {
             const container = document.getElementById('houses-grid');
-            
+            container.innerHTML = '';
+
             for (let target = 1; target <= 10; target++) {
                 const houseDiv = document.createElement('div');
                 houseDiv.className = 'house';
@@ -746,7 +760,7 @@
                 `;
 
                 for (let i = 0; i <= target; i++) {
-                    let j = target - i;
+                    const j = target - i;
                     html += `
                         <div class="house-row">
                             <div class="house-cell">${i}</div>
@@ -761,12 +775,38 @@
             }
         }
 
-        window.onload = () => {
+        function initTabs() {
+            document.querySelectorAll('.tab-btn').forEach((button) => {
+                button.addEventListener('click', () => {
+                    const tabId = button.dataset.tab;
+                    document.querySelectorAll('.tab-content').forEach((tab) => {
+                        tab.classList.toggle('active', tab.id === tabId);
+                    });
+
+                    document.querySelectorAll('.tab-btn').forEach((btn) => {
+                        const isActive = btn === button;
+                        btn.classList.toggle('active', isActive);
+                        btn.setAttribute('aria-selected', String(isActive));
+                    });
+                });
+            });
+        }
+
+        function initButtons() {
+            document.getElementById('generate-btn').addEventListener('click', generateProblems);
+            document.getElementById('print-btn').addEventListener('click', () => window.print());
+            document.getElementById('print-mult-btn').addEventListener('click', () => window.print());
+            document.getElementById('print-houses-btn').addEventListener('click', () => window.print());
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initTabs();
+            initButtons();
             generateProblems();
             buildMultiplicationTable();
             buildNumberHouses();
             document.getElementById('current-year').textContent = new Date().getFullYear();
-        };
+        });
     </script>
 </body>
 </html>
